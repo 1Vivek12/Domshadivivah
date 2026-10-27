@@ -1,17 +1,27 @@
 import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Heart, ShieldCheck, Sparkles, Gift, Check, X, Users, Award, ExternalLink } from 'lucide-react';
+import { Heart, ShieldCheck, Sparkles, Gift, Check, X, Users, Award, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function SocialPurposeSection({ isReducedMotion }) {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const sectionRef = useRef(null);
   const [pledgeModalOpen, setPledgeModalOpen] = useState(false);
-  const [pledgeAmount, setPledgeAmount] = useState(5100);
-  const [pledgeSubmitted, setPledgeSubmitted] = useState(false);
+  const [pledgeAmount, setPledgeAmount] = useState(2100);
+  const [customAmount, setCustomAmount] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submittedData, setSubmittedData] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const [donorData, setDonorData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    disclaimerAccepted: false,
+  });
 
   useEffect(() => {
     if (isReducedMotion) return;
@@ -37,13 +47,59 @@ export default function SocialPurposeSection({ isReducedMotion }) {
     return () => ctx.revert();
   }, [isReducedMotion]);
 
-  const handlePledgeSubmit = (e) => {
+  const activeAmount = customAmount ? Number(customAmount) : pledgeAmount;
+
+  const handlePledgeSubmit = async (e) => {
     e.preventDefault();
-    setPledgeSubmitted(true);
-    setTimeout(() => {
-      setPledgeSubmitted(false);
-      setPledgeModalOpen(false);
-    }, 2800);
+    setErrorMessage('');
+
+    if (!donorData.disclaimerAccepted) {
+      setErrorMessage(
+        language === 'hi'
+          ? 'कृपया स्वीकार करें कि यह योगदान पूर्णतः स्वैच्छिक है और सदस्यता शुल्क से अलग है।'
+          : 'Please acknowledge that this charity contribution is voluntary and separate from membership fees.'
+      );
+      return;
+    }
+
+    if (!activeAmount || activeAmount < 100) {
+      setErrorMessage(language === 'hi' ? 'कृपया कम से कम ₹100 की सहयोग राशि दर्ज करें।' : 'Please enter a valid amount (minimum ₹100).');
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const response = await fetch('/api/charity/contribute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contributorName: donorData.name,
+          email: donorData.email,
+          phone: donorData.phone,
+          amount: activeAmount,
+          disclaimerAccepted: true,
+        }),
+      });
+
+      const result = await response.json();
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Failed to submit pledge');
+      }
+
+      setSubmittedData(result.data);
+    } catch (err) {
+      console.error('Charity contribution submission error:', err);
+      setErrorMessage(err.message || 'Network error submitting pledge.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const resetModal = () => {
+    setSubmittedData(null);
+    setErrorMessage('');
+    setPledgeModalOpen(false);
   };
 
   return (
@@ -55,7 +111,7 @@ export default function SocialPurposeSection({ isReducedMotion }) {
       <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-600/30 via-transparent to-transparent" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
+        {/* Section Header (Requirement 5) */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1e0812]/80 border border-[#d4af37]/40 text-[#f5d77f] text-xs uppercase tracking-[0.2em] font-accent mb-4 backdrop-blur-md">
             <Heart size={14} className="text-[#f5d77f]" />
@@ -130,8 +186,10 @@ export default function SocialPurposeSection({ isReducedMotion }) {
 
               <div className="mt-8 pt-4 border-t border-[#d4af37]/20 flex flex-wrap gap-4 items-center justify-between">
                 <div>
-                  <span className="text-2xl font-display font-bold text-[#f5d77f]">480+</span>
-                  <span className="text-xs text-[#d8c7b5] block font-accent">{t.statMarriages}</span>
+                  <span className="text-2xl font-display font-bold text-[#f5d77f]">100%</span>
+                  <span className="text-xs text-[#d8c7b5] block font-accent">
+                    {language === 'hi' ? 'स्वैच्छिक एवं ऐच्छिक' : 'Voluntary & Optional'}
+                  </span>
                 </div>
                 <button
                   onClick={() => setPledgeModalOpen(true)}
@@ -144,7 +202,7 @@ export default function SocialPurposeSection({ isReducedMotion }) {
           </div>
         </div>
 
-        {/* CRITICAL DISTINCTION CARD (Matrimonial vs Charitable) */}
+        {/* CRITICAL SEPARATE ACCOUNTING CARD (Requirement 5 & 6) */}
         <div className="purpose-card p-6 sm:p-8 rounded-2xl bg-[#14030a] border-2 border-[#d4af37]/60 shadow-[0_15px_45px_rgba(0,0,0,0.8)]">
           <div className="text-center max-w-2xl mx-auto mb-8">
             <span className="text-xs font-mono uppercase tracking-[0.2em] text-[#d4af37] block mb-1">
@@ -184,7 +242,7 @@ export default function SocialPurposeSection({ isReducedMotion }) {
               </ul>
             </div>
 
-            {/* Column B: Charitable Kalyanam Sahayata */}
+            {/* Column B: Voluntary Kalyanam Charity */}
             <div className="p-6 rounded-xl bg-[#200511] border border-[#d4af37]/50 relative">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-8 h-8 rounded-full bg-[#d4af37] text-black font-bold flex items-center justify-center">
@@ -214,27 +272,39 @@ export default function SocialPurposeSection({ isReducedMotion }) {
 
       {/* Interactive Sahayata Pledge Modal */}
       {pledgeModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg animate-in fade-in">
-          <div className="relative w-full max-w-lg royal-card bg-[#16030b] border-2 border-[#d4af37] p-6 sm:p-8 rounded-2xl shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-lg animate-in fade-in overflow-y-auto">
+          <div className="relative w-full max-w-lg royal-card bg-[#16030b] border-2 border-[#d4af37] p-6 sm:p-8 rounded-2xl shadow-2xl my-6">
             <button
-              onClick={() => setPledgeModalOpen(false)}
+              onClick={resetModal}
               className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-[#f5d77f] hover:bg-[#801235] transition-colors border border-[#d4af37]/40"
               aria-label="Close modal"
             >
               <X size={18} />
             </button>
 
-            {pledgeSubmitted ? (
-              <div className="text-center py-8 space-y-4">
+            {submittedData ? (
+              <div className="text-center py-6 space-y-4">
                 <div className="w-16 h-16 rounded-full bg-[#801235] border-2 border-[#d4af37] mx-auto flex items-center justify-center text-[#f5d77f] animate-bounce">
                   <Heart size={32} />
                 </div>
+                <span className="text-xs font-mono uppercase tracking-widest text-[#d4af37]">
+                  CHARITY REFERENCE: {submittedData.id}
+                </span>
                 <h3 className="font-display font-bold text-2xl text-gold-gradient">
                   {t.pledgeThanksTitle}
                 </h3>
-                <p className="text-sm text-[#faeed1] font-accent">
-                  {t.pledgeThanksDesc}
-                </p>
+                <div className="p-3.5 rounded-lg bg-[#240614] border border-[#d4af37]/35 text-xs text-[#faeed1] leading-relaxed text-left">
+                  <p>{language === 'hi' ? submittedData.messageHindi : submittedData.messageEn}</p>
+                  <p className="mt-2 text-stone-300 italic text-[11px]">
+                    * {language === 'hi' ? 'चैरिटी बहीखाता में अलग प्रविष्टि दर्ज की गई है।' : 'Recorded in the segregated charity ledger.'}
+                  </p>
+                </div>
+                <button
+                  onClick={resetModal}
+                  className="btn-royal-gold text-xs px-6 py-2"
+                >
+                  {language === 'hi' ? 'स्वीकारें एवं बंद करें' : 'Acknowledge & Close'}
+                </button>
               </div>
             ) : (
               <div>
@@ -244,23 +314,33 @@ export default function SocialPurposeSection({ isReducedMotion }) {
                 <h3 className="font-display font-bold text-2xl text-[#faeed1] mb-2">
                   {t.pledgeTitle}
                 </h3>
-                <p className="text-xs text-[#d8c7b5] leading-relaxed mb-6 font-light">
+                <p className="text-xs text-[#d8c7b5] leading-relaxed mb-4 font-light">
                   {t.pledgeDesc}
                 </p>
 
-                <form onSubmit={handlePledgeSubmit} className="space-y-5">
+                {errorMessage && (
+                  <div className="mb-4 p-3 rounded-lg bg-red-950/80 border border-red-500/50 text-xs text-red-200 flex items-center gap-2">
+                    <AlertTriangle size={15} className="shrink-0 text-red-400" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
+
+                <form onSubmit={handlePledgeSubmit} className="space-y-4">
                   <div>
                     <label className="text-xs font-accent uppercase text-[#faeed1] block mb-2">
                       {t.selectAmount}
                     </label>
-                    <div className="grid grid-cols-3 gap-3">
-                      {[2100, 5100, 11000].map((amt) => (
+                    <div className="grid grid-cols-3 gap-2.5 mb-2.5">
+                      {[1100, 2100, 5100].map((amt) => (
                         <button
                           type="button"
                           key={amt}
-                          onClick={() => setPledgeAmount(amt)}
-                          className={`py-2.5 rounded-lg border text-xs font-mono font-bold transition-all ${
-                            pledgeAmount === amt
+                          onClick={() => {
+                            setPledgeAmount(amt);
+                            setCustomAmount('');
+                          }}
+                          className={`py-2 rounded-lg border text-xs font-mono font-bold transition-all ${
+                            !customAmount && pledgeAmount === amt
                               ? 'bg-[#d4af37] text-black border-[#f5d77f] shadow-lg'
                               : 'bg-black/40 border-[#d4af37]/30 text-[#faeed1] hover:border-[#d4af37]'
                           }`}
@@ -269,41 +349,94 @@ export default function SocialPurposeSection({ isReducedMotion }) {
                         </button>
                       ))}
                     </div>
+
+                    <input
+                      type="number"
+                      placeholder={t.customAmountLabel}
+                      min="100"
+                      value={customAmount}
+                      onChange={(e) => setCustomAmount(e.target.value)}
+                      className="w-full px-3.5 py-2 rounded-lg bg-black/50 border border-[#d4af37]/30 text-xs text-[#faeed1] focus:outline-none focus:border-[#d4af37]"
+                    />
                   </div>
 
                   <div>
                     <label className="text-xs font-accent uppercase text-[#faeed1] block mb-1">
-                      {t.sponsorName}
+                      {t.sponsorName} *
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="e.g. शर्मा परिवार / Sharma Family"
-                      className="w-full px-4 py-2.5 rounded-lg bg-black/50 border border-[#d4af37]/30 text-xs text-[#faeed1] focus:outline-none focus:border-[#d4af37]"
+                      value={donorData.name}
+                      onChange={(e) => setDonorData({ ...donorData, name: e.target.value })}
+                      placeholder="e.g. शर्मा परिवार, जयपुर / Sharma Family"
+                      className="w-full px-4 py-2 rounded-lg bg-black/50 border border-[#d4af37]/30 text-xs text-[#faeed1] focus:outline-none focus:border-[#d4af37]"
                     />
                   </div>
 
-                  <div>
-                    <label className="text-xs font-accent uppercase text-[#faeed1] block mb-1">
-                      {t.sponsorEmail}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-xs font-accent uppercase text-[#faeed1] block mb-1">
+                        {t.sponsorPhone}
+                      </label>
+                      <input
+                        type="tel"
+                        value={donorData.phone}
+                        onChange={(e) => setDonorData({ ...donorData, phone: e.target.value })}
+                        placeholder="+91 98765 43210"
+                        className="w-full px-3.5 py-2 rounded-lg bg-black/50 border border-[#d4af37]/30 text-xs text-[#faeed1] focus:outline-none focus:border-[#d4af37]"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs font-accent uppercase text-[#faeed1] block mb-1">
+                        {t.sponsorEmail}
+                      </label>
+                      <input
+                        type="email"
+                        value={donorData.email}
+                        onChange={(e) => setDonorData({ ...donorData, email: e.target.value })}
+                        placeholder="family@domain.com"
+                        className="w-full px-3.5 py-2 rounded-lg bg-black/50 border border-[#d4af37]/30 text-xs text-[#faeed1] focus:outline-none focus:border-[#d4af37]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Disclaimer & Voluntary Checkbox */}
+                  <div className="pt-1">
+                    <label className="flex items-start gap-2.5 cursor-pointer text-xs text-stone-300">
+                      <input
+                        type="checkbox"
+                        required
+                        checked={donorData.disclaimerAccepted}
+                        onChange={(e) => setDonorData({ ...donorData, disclaimerAccepted: e.target.checked })}
+                        className="mt-0.5 accent-[#d4af37]"
+                      />
+                      <span>
+                        {t.disclaimerAcknowledgeLabel}
+                      </span>
                     </label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="family@domain.com"
-                      className="w-full px-4 py-2.5 rounded-lg bg-black/50 border border-[#d4af37]/30 text-xs text-[#faeed1] focus:outline-none focus:border-[#d4af37]"
-                    />
                   </div>
 
-                  <p className="text-[10px] text-stone-400 italic">
-                    * {t.modalDisclaimer}
-                  </p>
+                  {/* Payment Gateway Pending Notice */}
+                  <div className="p-2.5 rounded-lg bg-black/60 border border-[#d4af37]/20 text-[11px] text-amber-200/80 leading-relaxed flex items-start gap-2">
+                    <AlertTriangle size={15} className="text-amber-400 shrink-0 mt-0.5" />
+                    <span>
+                      {language === 'hi'
+                        ? 'भुगतान गेटवे एकीकरण प्रक्रियाधीन है। यह स्वैच्छिक संकल्प अलग चैरिटी बहीखाते में दर्ज होगा।'
+                        : 'Payment gateway integration is pending. This pledge is recorded in the segregated charity ledger.'}
+                    </span>
+                  </div>
 
                   <button
                     type="submit"
-                    className="btn-royal-gold w-full text-center py-3 text-xs"
+                    disabled={submitting}
+                    className="btn-royal-gold w-full text-center py-3 text-xs disabled:opacity-50"
                   >
-                    {t.confirmPledge}
+                    {submitting
+                      ? (language === 'hi' ? 'संकल्प दर्ज हो रहा है...' : 'Recording Pledge...')
+                      : `${t.confirmPledge} (₹${activeAmount.toLocaleString()})`
+                    }
                   </button>
                 </form>
               </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Sparkles, Box, ShieldCheck, Menu, X, Heart, Globe } from 'lucide-react';
+import { Volume2, VolumeX, Sparkles, Box, ShieldCheck, Menu, X, Heart, Globe, Lock } from 'lucide-react';
 import { royalAudio } from '../utils/audioAmbience';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -8,7 +8,8 @@ export default function Navbar({
   setIs3DMode,
   isReducedMotion,
   setIsReducedMotion,
-  onOpenMembershipModal
+  onOpenMembershipModal,
+  onOpenAdminModal,
 }) {
   const { language, toggleLanguage, t } = useLanguage();
   const [isAudioPlaying, setIsAudioPlaying] = useState(false);
@@ -147,6 +148,16 @@ export default function Navbar({
             <Sparkles size={13} />
           </button>
 
+          {/* Admin Button */}
+          <button
+            onClick={onOpenAdminModal}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#d4af37]/40 bg-black/40 text-xs font-accent text-[#faeed1] hover:border-[#f5d77f] hover:text-[#f5d77f] transition-all"
+            title={t.navAdmin}
+          >
+            <Lock size={12} className="text-[#f5d77f]" />
+            <span>{t.navAdmin}</span>
+          </button>
+
           {/* Royal CTA */}
           <button
             onClick={onOpenMembershipModal}
@@ -233,6 +244,17 @@ export default function Navbar({
             >
               <Sparkles size={14} />
               <span>{isReducedMotion ? 'Enable Motion' : t.navReducedMotion}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenAdminModal();
+              }}
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded border border-[#d4af37]/40 text-xs font-accent uppercase text-[#f5d77f] bg-black/50"
+            >
+              <Lock size={15} />
+              <span>{t.navAdmin}</span>
             </button>
 
             <button

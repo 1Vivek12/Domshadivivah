@@ -7,14 +7,16 @@ import DiscoverMatchSection from './components/DiscoverMatchSection';
 import SocialPurposeSection from './components/SocialPurposeSection';
 import FinalInvitationSection from './components/FinalInvitationSection';
 import MembershipModal from './components/MembershipModal';
+import AdminPanel from './components/AdminPanel';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
-import { Eye, ShieldCheck, Box, Image as ImageIcon, Sparkles, X, Globe } from 'lucide-react';
+import { Eye, ShieldCheck, Box, Image as ImageIcon, Sparkles, X, Globe, Lock } from 'lucide-react';
 
 function MainAppContent() {
   const { language, toggleLanguage, t } = useLanguage();
   const [is3DMode, setIs3DMode] = useState(false);
   const [isReducedMotion, setIsReducedMotion] = useState(false);
   const [membershipModalOpen, setMembershipModalOpen] = useState(false);
+  const [adminModalOpen, setAdminModalOpen] = useState(false);
   const [activeScene, setActiveScene] = useState(1);
   const [showManifest, setShowManifest] = useState(false);
 
@@ -59,6 +61,7 @@ function MainAppContent() {
         isReducedMotion={isReducedMotion}
         setIsReducedMotion={setIsReducedMotion}
         onOpenMembershipModal={() => setMembershipModalOpen(true)}
+        onOpenAdminModal={() => setAdminModalOpen(true)}
       />
 
       {/* Main Cinematic Scroll Story */}
@@ -141,6 +144,16 @@ function MainAppContent() {
         >
           <Globe size={13} />
           <span>{language === 'hi' ? 'English' : 'हिन्दी'}</span>
+        </button>
+
+        {/* Floating Secretariat Admin Button */}
+        <button
+          onClick={() => setAdminModalOpen(true)}
+          className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#18040d]/90 border border-[#d4af37]/60 text-xs font-accent text-[#faeed1] hover:text-[#f5d77f] shadow-lg hover:scale-105 transition-transform backdrop-blur-md"
+          title={t.navAdmin}
+        >
+          <Lock size={12} className="text-[#f5d77f]" />
+          <span>{t.navAdmin}</span>
         </button>
       </div>
 
@@ -233,6 +246,12 @@ function MainAppContent() {
       <MembershipModal
         isOpen={membershipModalOpen}
         onClose={() => setMembershipModalOpen(false)}
+      />
+
+      {/* Secretariat Administrative Governance Console */}
+      <AdminPanel
+        isOpen={adminModalOpen}
+        onClose={() => setAdminModalOpen(false)}
       />
     </div>
   );

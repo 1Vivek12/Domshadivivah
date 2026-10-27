@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Sparkles, MapPin, Briefcase, GraduationCap, Heart, Eye, ShieldCheck, X, Compass, Star } from 'lucide-react';
+import { Sparkles, MapPin, Briefcase, GraduationCap, Heart, Eye, ShieldCheck, X, Compass, Star, Users, CheckCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -12,54 +12,16 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
   const [activeFilter, setActiveFilter] = useState('all');
   const [selectedProfile, setSelectedProfile] = useState(null);
 
+  // Profiles with accurate Phase 2 requirements (Family Members, Statuses)
   const demoProfiles = [
     {
-      id: 'DEMO-BRIDE-101',
-      type: 'bride',
-      nameEn: 'Ananya Sharma',
-      nameHi: 'अनन्या शर्मा',
-      age: 26,
-      height: "5'6\"",
-      professionEn: 'Principal AI Researcher & Classical Artist',
-      professionHi: 'प्रमुख एआई शोधकर्ता एवं शास्त्रीय नृत्यांगना',
-      educationEn: 'M.Tech, Indian Institute of Science (IISc)',
-      educationHi: 'एम.टेक, भारतीय विज्ञान संस्थान (IISc बंगलुरु)',
-      locationEn: 'Bengaluru • Ancestral: Varanasi, UP',
-      locationHi: 'बेंगलुरु • पैतृक: काशी (वाराणसी)',
-      gotraEn: 'Kashyapa Gotra • Brahmin',
-      gotraHi: 'कश्यप गोत्र • सनाढ्य ब्राह्मण',
-      image: '/assets/bride_demo_profile.jpg',
-      bioEn: 'Deeply appreciative of Vedic philosophy and classical arts while thriving in cutting-edge technology. Enjoys Sanskrit literature, sitar recitals, and respectful joint family conversations.',
-      bioHi: 'वैदिक दर्शन एवं भारतीय शास्त्रीय कलाओं के प्रति गहरी निष्ठा, साथ ही आधुनिक तकनीक में अग्रणी। संस्कृत साहित्य, सितार वादन एवं संयुक्त पारिवारिक संस्कारों में विश्वास।',
-      kundali: {
-        rashiEn: 'Kanya (Virgo)',
-        rashiHi: 'कन्या राशि',
-        nakshatraEn: 'Hasta',
-        nakshatraHi: 'हस्त नक्षत्र',
-        manglikEn: 'Non-Manglik',
-        manglikHi: 'अमांगलिक (निर्दोष)',
-        doshaEn: 'Nadi Nirbhaya',
-        doshaHi: 'नाड़ी दोष रहित',
-        gunaScore: '32 / 36 Gun Milan',
-      },
-      family: {
-        fatherEn: 'Senior Director, Public Health Research',
-        fatherHi: 'वरिष्ठ निदेशक, जनस्वास्थ्य अनुसंधान',
-        motherEn: 'Professor of Philosophy (Retd.)',
-        motherHi: 'दर्शनशास्त्र प्राध्यापिका (सेवानिवृत्त)',
-        ancestralOriginEn: 'Varanasi (Kashi)',
-        ancestralOriginHi: 'वाराणसी (काशी)',
-      },
-      valuesEn: ['Vedic Traditions', 'Intellectual Dialogue', 'Classical Music', 'Community Seva'],
-      valuesHi: ['वैदिक परंपरा', 'विद्वत संवाद', 'शास्त्रीय संगीत', 'सामाजिक सेवा'],
-    },
-    {
-      id: 'DEMO-GROOM-202',
+      id: 'MEM-2026-001',
       type: 'groom',
-      nameEn: 'Raghavendra Rathore',
+      nameEn: 'Raghavendra Singh Rathore',
       nameHi: 'राघवेंद्र सिंह राठौड़',
       age: 29,
       height: "6'1\"",
+      status: 'active',
       professionEn: 'Heritage Architect & Urban Preservationist',
       professionHi: 'विरासत वास्तुकार एवं ऐतिहासिक धरोहर संरक्षक',
       educationEn: 'M.Arch, School of Planning & Architecture (SPA)',
@@ -69,8 +31,8 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
       gotraEn: 'Vatsa Gotra • Rajput Kshatriya',
       gotraHi: 'वत्स गोत्र • सूर्यवंशी राजपूत क्षत्रिय',
       image: '/assets/groom_demo_profile.jpg',
-      bioEn: 'Dedicated to preserving India’s architectural treasures and promoting sustainable craftsmanship. Grounded in Mewari principles of honor, loyalty, and deep spiritual reverence for family elders.',
-      bioHi: 'भारत की स्थापत्य धरोहरों के संरक्षण हेतु समर्पित। मेवाड़ी आन-बान-शान, कुल मर्यादा, स्वामिभक्ति एवं ज्येष्ठजनों के प्रति अगाध आदर से परिपूर्ण।',
+      bioEn: 'Dedicated to preserving India’s architectural treasures. Grounded in Mewari principles of honor, loyalty, and deep spiritual reverence for family elders.',
+      bioHi: 'भारत की स्थापत्य धरोहरों के संरक्षण हेतु समर्पित। मेवाड़ी कुल मर्यादा एवं ज्येष्ठजनों के प्रति अगाध आदर से परिपूर्ण।',
       kundali: {
         rashiEn: 'Simha (Leo)',
         rashiHi: 'सिंह राशि',
@@ -78,28 +40,61 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
         nakshatraHi: 'मघा नक्षत्र',
         manglikEn: 'Anshik (Gentle) Manglik',
         manglikHi: 'आंशिक मांगलिक (सौम्य)',
-        doshaEn: 'Dosha Shanti Completed',
-        doshaHi: 'दोष शांति संपन्न',
         gunaScore: '33 / 36 Gun Milan',
       },
-      family: {
-        fatherEn: 'Heritage Conservation Trustee & Industrialist',
-        fatherHi: 'धरोहर न्यास ट्रस्टी एवं उद्योगपति',
-        motherEn: 'Philanthropist & Classical Weaver Guild Patron',
-        motherHi: 'समाजसेवी एवं पारंपरिक बुनकर शिल्पी संरक्षिका',
-        ancestralOriginEn: 'Udaipur (Mewar)',
-        ancestralOriginHi: 'उदयपुर (मेवाड़)',
-      },
+      // Requirement 3: Family Members (परिवार के सदस्य)
+      familyMembers: [
+        { relationEn: 'Father', relationHi: 'पिता', name: 'Thakur Vikram Singh Rathore' },
+        { relationEn: 'Mother', relationHi: 'माता', name: 'Rani Devika Rathore' },
+        { relationEn: 'Brother', relationHi: 'भाई', name: 'Digvijay Singh Rathore' }
+      ],
       valuesEn: ['Heritage Preservation', 'Family Honor', 'Equestrian Sports', 'Spiritual Integrity'],
       valuesHi: ['धरोहर संरक्षण', 'कुल सम्मान', 'अश्वारोहण', 'धार्मिक निष्ठा'],
     },
     {
-      id: 'DEMO-BRIDE-103',
+      id: 'MEM-2026-002',
+      type: 'bride',
+      nameEn: 'Ananya Sharma',
+      nameHi: 'अनन्या शर्मा',
+      age: 26,
+      height: "5'6\"",
+      status: 'in_discussion',
+      professionEn: 'Principal AI Researcher & Classical Artist',
+      professionHi: 'प्रमुख एआई शोधकर्ता एवं शास्त्रीय नृत्यांगना',
+      educationEn: 'M.Tech, Indian Institute of Science (IISc)',
+      educationHi: 'एम.टेक, भारतीय विज्ञान संस्थान (IISc बंगलुरु)',
+      locationEn: 'Bengaluru • Ancestral: Varanasi, UP',
+      locationHi: 'बेंगलुरु • पैतृक: काशी (वाराणसी)',
+      gotraEn: 'Kashyapa Gotra • Brahmin',
+      gotraHi: 'कश्यप गोत्र • सनाढ्य ब्राह्मण',
+      image: '/assets/bride_demo_profile.jpg',
+      bioEn: 'Deeply appreciative of Vedic philosophy and classical arts while thriving in cutting-edge technology. Enjoys Sanskrit literature and respectful family conversations.',
+      bioHi: 'वैदिक दर्शन एवं भारतीय शास्त्रीय कलाओं के प्रति गहरी निष्ठा। संस्कृत साहित्य, सितार वादन एवं संयुक्त पारिवारिक संस्कारों में विश्वास।',
+      kundali: {
+        rashiEn: 'Kanya (Virgo)',
+        rashiHi: 'कन्या राशि',
+        nakshatraEn: 'Hasta',
+        nakshatraHi: 'हस्त नक्षत्र',
+        manglikEn: 'Non-Manglik',
+        manglikHi: 'अमांगलिक (निर्दोष)',
+        gunaScore: '32 / 36 Gun Milan',
+      },
+      familyMembers: [
+        { relationEn: 'Father', relationHi: 'पिता', name: 'Dr. Ramakant Sharma' },
+        { relationEn: 'Mother', relationHi: 'माता', name: 'Prof. Gayatri Sharma' },
+        { relationEn: 'Sister', relationHi: 'बहन', name: 'Sneha Sharma' }
+      ],
+      valuesEn: ['Vedic Traditions', 'Intellectual Dialogue', 'Classical Music', 'Community Seva'],
+      valuesHi: ['वैदिक परंपरा', 'विद्वत संवाद', 'शास्त्रीय संगीत', 'सामाजिक सेवा'],
+    },
+    {
+      id: 'MEM-2026-003',
       type: 'bride',
       nameEn: 'Priyadarshini Rao',
       nameHi: 'प्रियदर्शिनी राव',
       age: 27,
       height: "5'5\"",
+      status: 'marriage_fixed', // Requirement 4: विवाह तय हुआ
       professionEn: 'Biomedical Innovator & Bharatanatyam Exponent',
       professionHi: 'जैव-चिकित्सा वैज्ञानिक एवं भरतनाट्यम नृत्यांगना',
       educationEn: 'PhD Candidate, AIIMS New Delhi',
@@ -109,8 +104,8 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
       gotraEn: 'Bharadwaja Gotra',
       gotraHi: 'भारद्वाज गोत्र',
       image: '/assets/bride_demo_profile.jpg',
-      bioEn: 'Combining scientific rigor with deep devotion to ancient temple arts. Values humility, lifelong learning, and creating a warm, spiritual home atmosphere.',
-      bioHi: 'आधुनिक चिकित्सा विज्ञान के साथ प्राचीन मंदिर कलाओं का सुंदर समन्वय। विनम्रता, निरंतर ज्ञानार्जन और आध्यात्मिक गृहस्थ वातावरण की पक्षधर।',
+      bioEn: 'Combining scientific rigor with deep devotion to ancient temple arts. Marriage fixed with mutual family blessings.',
+      bioHi: 'आधुनिक चिकित्सा विज्ञान के साथ प्राचीन मंदिर कलाओं का समन्वय। दोनों परिवारों के आशीर्वाद से विवाह तय हुआ।',
       kundali: {
         rashiEn: 'Dhanu (Sagittarius)',
         rashiHi: 'धनु राशि',
@@ -118,28 +113,23 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
         nakshatraHi: 'मूल नक्षत्र',
         manglikEn: 'Non-Manglik',
         manglikHi: 'अमांगलिक',
-        doshaEn: 'None',
-        doshaHi: 'निर्दोष',
         gunaScore: '31 / 36 Gun Milan',
       },
-      family: {
-        fatherEn: 'Chief Surgeon, Medical University',
-        fatherHi: 'मुख्य शल्य चिकित्सक, आयुर्विज्ञान संस्थान',
-        motherEn: 'Carnatic Vocalist & School Principal',
-        motherHi: 'कर्नाटक संगीत विदुषी एवं प्राचार्या',
-        ancestralOriginEn: 'Andhra Pradesh',
-        ancestralOriginHi: 'आंध्र प्रदेश',
-      },
+      familyMembers: [
+        { relationEn: 'Father', relationHi: 'पिता', name: 'Dr. K.V. Rao' },
+        { relationEn: 'Mother', relationHi: 'माता', name: 'V. Shailaja Rao' }
+      ],
       valuesEn: ['Vedic Rhythms', 'Medical Ethics', 'Temple Architecture', 'Warm Hospitality'],
       valuesHi: ['वैदिक संस्कार', 'चिकित्सीय शुचिता', 'मंदिर वास्तु', 'आतिथ्य सत्कार'],
     },
     {
-      id: 'DEMO-GROOM-204',
+      id: 'MEM-2026-004',
       type: 'groom',
       nameEn: 'Devendra Pratap Singh',
       nameHi: 'देवेंद्र प्रताप सिंह',
       age: 30,
       height: "6'0\"",
+      status: 'active',
       professionEn: 'Civil Services Officer & Rural Development Lead',
       professionHi: 'प्रशासनिक अधिकारी (सिविल सेवा) एवं ग्रामीण विकास प्रमुख',
       educationEn: 'B.Tech (IIT Kanpur), Public Policy (LBSNAA)',
@@ -149,8 +139,8 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
       gotraEn: 'Shandilya Gotra',
       gotraHi: 'शांडिल्य गोत्र',
       image: '/assets/groom_demo_profile.jpg',
-      bioEn: 'Committed to grassroots public service and integrity. Believes marriage is a sacred partnership where both partners champion each other’s aspirations while upholding familial dignity.',
-      bioHi: 'सत्यनिष्ठा और लोक कल्याण के प्रति समर्पित। विवाह को ऐसा पवित्र सहचर्य मानते हैं जिसमें दोनों परिवार एक-दूसरे के आदर्शों का सम्मान करते हैं।',
+      bioEn: 'Committed to grassroots public service and integrity. Believes marriage is a sacred partnership where both partners champion each other’s aspirations.',
+      bioHi: 'सत्यनिष्ठा और लोक कल्याण के प्रति समर्पित। विवाह को ऐसा पवित्र सहचर्य मानते हैं जिसमें दोनों परिवार परस्पर मर्यादा का आदर करते हैं।',
       kundali: {
         rashiEn: 'Mesha (Aries)',
         rashiHi: 'मेष राशि',
@@ -158,18 +148,12 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
         nakshatraHi: 'अश्विनी नक्षत्र',
         manglikEn: 'Non-Manglik',
         manglikHi: 'अमांगलिक',
-        doshaEn: 'None',
-        doshaHi: 'निर्दोष',
         gunaScore: '34 / 36 Gun Milan',
       },
-      family: {
-        fatherEn: 'High Court Senior Advocate',
-        fatherHi: 'वरिष्ठ अधिवक्ता, उच्च न्यायालय',
-        motherEn: 'Homemaker & Sanskrit Scholar',
-        motherHi: 'संस्कृत विदुषी एवं कुशल गृहस्वामिनी',
-        ancestralOriginEn: 'Ayodhya / Awadh',
-        ancestralOriginHi: 'अयोध्या (अवध)',
-      },
+      familyMembers: [
+        { relationEn: 'Father', relationHi: 'पिता', name: 'Justice (Retd.) B.P. Singh' },
+        { relationEn: 'Mother', relationHi: 'माता', name: 'Smt. Sharda Singh' }
+      ],
       valuesEn: ['Public Good', 'Sanskrit Studies', 'Quiet Dignity', 'Lifelong Devotion'],
       valuesHi: ['लोक सेवा', 'संस्कृत स्वाध्याय', 'शालीनता', 'अखंड निष्ठा'],
     },
@@ -211,6 +195,35 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
   const getGotra = (p) => (language === 'hi' ? p.gotraHi : p.gotraEn);
   const getBio = (p) => (language === 'hi' ? p.bioHi : p.bioEn);
   const getValues = (p) => (language === 'hi' ? p.valuesHi : p.valuesEn);
+
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'active':
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-accent uppercase bg-emerald-950/80 text-emerald-300 border border-emerald-500/40">
+            ● {t.statusActive}
+          </span>
+        );
+      case 'in_discussion':
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-accent uppercase bg-amber-950/80 text-amber-300 border border-amber-500/40">
+            ◷ {t.statusInDiscussion}
+          </span>
+        );
+      case 'marriage_fixed':
+        return (
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-accent uppercase bg-[#801235] text-[#faeed1] border border-[#f5d77f] shadow">
+            ★ {t.statusMarriageFixed}
+          </span>
+        );
+      default:
+        return (
+          <span className="px-2 py-0.5 rounded-full text-[10px] font-accent uppercase bg-stone-900 text-stone-400 border border-stone-600">
+            {t.statusInactive}
+          </span>
+        );
+    }
+  };
 
   return (
     <section
@@ -275,14 +288,13 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
               key={profile.id}
               className="profile-card-item royal-card flex flex-col justify-between group hover:border-[#f5d77f] transition-all"
             >
-              {/* Corner Ornaments */}
               <div className="royal-card-corner corner-tl" />
               <div className="royal-card-corner corner-tr" />
               <div className="royal-card-corner corner-bl" />
               <div className="royal-card-corner corner-br" />
 
               <div>
-                {/* Profile Portrait with Badge */}
+                {/* Profile Portrait with Status Tag */}
                 <div className="relative h-72 sm:h-80 overflow-hidden bg-black/60">
                   <img
                     src={profile.image}
@@ -292,15 +304,14 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#14030a] via-transparent to-black/30" />
 
-                  {/* Top Badge */}
+                  {/* Top Left: Reference ID */}
                   <div className="absolute top-3 left-3 px-2.5 py-1 rounded bg-black/70 backdrop-blur-md border border-[#d4af37]/40 text-[10px] uppercase tracking-widest text-[#f5d77f] font-mono">
                     {profile.id}
                   </div>
 
-                  {/* Compatibility Score Tag */}
-                  <div className="absolute top-3 right-3 px-2 py-1 rounded bg-[#801235]/80 backdrop-blur-md border border-[#d4af37]/50 text-[10px] text-[#faeed1] font-accent flex items-center gap-1">
-                    <Star size={11} className="text-[#f5d77f]" />
-                    <span>{profile.kundali.gunaScore.split(' ')[0]} Gunas</span>
+                  {/* Top Right: Status Badge (Requirement 4) */}
+                  <div className="absolute top-3 right-3">
+                    {getStatusBadge(profile.status)}
                   </div>
 
                   {/* Bottom Portrait Info */}
@@ -331,9 +342,13 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
                     <span className="line-clamp-1">{getLoc(profile)}</span>
                   </div>
 
-                  <p className="font-body text-xs text-stone-300 line-clamp-2 pt-2 border-t border-[#d4af37]/15 font-light">
-                    {getBio(profile)}
-                  </p>
+                  {/* Requirement 3: Family Members preview (replaces maternal) */}
+                  <div className="flex items-start gap-2 text-xs text-stone-300 pt-2 border-t border-[#d4af37]/15">
+                    <Users size={14} className="text-[#f5d77f] shrink-0 mt-0.5" />
+                    <span className="line-clamp-1 font-accent">
+                      {t.familyMembersTitle}: {profile.familyMembers.map((m) => `${language === 'hi' ? m.relationHi : m.relationEn}: ${m.name}`).slice(0, 2).join(', ')}
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -354,8 +369,8 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
 
       {/* Profile Detail Modal */}
       {selectedProfile && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg animate-in fade-in">
-          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto royal-card bg-[#14030a] border-2 border-[#d4af37] p-6 sm:p-8 rounded-2xl shadow-[0_0_50px_rgba(212,175,55,0.3)]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg animate-in fade-in overflow-y-auto">
+          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto royal-card bg-[#14030a] border-2 border-[#d4af37] p-6 sm:p-8 rounded-2xl shadow-[0_0_50px_rgba(212,175,55,0.3)] my-6">
             <button
               onClick={() => setSelectedProfile(null)}
               className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-[#f5d77f] hover:bg-[#801235] transition-colors border border-[#d4af37]/40"
@@ -363,6 +378,22 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
             >
               <X size={20} />
             </button>
+
+            {/* Marriage Fixed Consent Banner (Requirement 4) */}
+            {selectedProfile.status === 'marriage_fixed' && (
+              <div className="mb-6 p-4 rounded-xl bg-gradient-to-r from-[#801235] to-[#3a0818] border border-[#f5d77f] text-left">
+                <div className="flex items-center gap-2 font-display text-sm font-bold text-[#f5d77f]">
+                  <CheckCircle size={18} />
+                  <span>{t.marriageFixedBannerTitle}</span>
+                </div>
+                <p className="text-xs text-[#faeed1] mt-1">
+                  {t.marriageFixedBannerDesc}
+                </p>
+                <div className="mt-2 pt-2 border-t border-white/10 text-[11px] text-amber-200/90 italic">
+                  * {t.voluntaryCharityNoteDesc}
+                </div>
+              </div>
+            )}
 
             <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-start">
               {/* Modal Left: Image */}
@@ -379,18 +410,15 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
                   <p className="font-display font-bold text-lg text-[#faeed1]">
                     {getName(selectedProfile)}
                   </p>
-                  <p className="text-xs text-stone-300 font-accent">
-                    {selectedProfile.age} {language === 'hi' ? 'वर्ष' : 'Yrs'} • {selectedProfile.height}
-                  </p>
+                  <div className="mt-1 flex items-center justify-center gap-2">
+                    {getStatusBadge(selectedProfile.status)}
+                  </div>
                 </div>
               </div>
 
               {/* Modal Right: In-depth Details */}
-              <div className="sm:col-span-7 space-y-5">
+              <div className="sm:col-span-7 space-y-4">
                 <div>
-                  <div className="inline-block px-3 py-1 rounded bg-[#801235]/60 border border-[#d4af37]/40 text-xs font-accent text-[#f5d77f] uppercase tracking-wider mb-2">
-                    {t.vedicScoreLabel}: {selectedProfile.kundali.gunaScore}
-                  </div>
                   <h3 className="font-display font-bold text-2xl text-gold-gradient">
                     {getName(selectedProfile)}
                   </h3>
@@ -400,8 +428,8 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
                 </div>
 
                 {/* Kundali Details Table */}
-                <div className="p-4 rounded-xl bg-black/50 border border-[#d4af37]/20 space-y-2">
-                  <h4 className="text-xs font-accent uppercase tracking-widest text-[#f5d77f] flex items-center gap-1.5 pb-2 border-b border-[#d4af37]/15">
+                <div className="p-3.5 rounded-xl bg-black/50 border border-[#d4af37]/20 space-y-2">
+                  <h4 className="text-xs font-accent uppercase tracking-widest text-[#f5d77f] flex items-center gap-1.5 pb-1.5 border-b border-[#d4af37]/15">
                     <Compass size={14} />
                     <span>{t.astrologyTitle}</span>
                   </h4>
@@ -419,47 +447,51 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
                       </span>
                     </div>
                     <div>
-                      <span className="text-stone-400">{language === 'hi' ? 'मांगलिक दोष:' : 'Manglik Status:'}</span>{' '}
+                      <span className="text-stone-400">{language === 'hi' ? 'मांगलिक स्थिति:' : 'Manglik Status:'}</span>{' '}
                       <span className="text-[#faeed1] font-semibold">
                         {language === 'hi' ? selectedProfile.kundali.manglikHi : selectedProfile.kundali.manglikEn}
                       </span>
                     </div>
                     <div>
-                      <span className="text-stone-400">{language === 'hi' ? 'गोत्र:' : 'Gotra:'}</span>{' '}
-                      <span className="text-[#faeed1] font-semibold">{getGotra(selectedProfile)}</span>
+                      <span className="text-stone-400">{language === 'hi' ? 'गुण मिलान:' : 'Gun Score:'}</span>{' '}
+                      <span className="text-[#faeed1] font-semibold">{selectedProfile.kundali.gunaScore}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Family Pedigree */}
-                <div className="p-4 rounded-xl bg-black/50 border border-[#d4af37]/20 space-y-2">
-                  <h4 className="text-xs font-accent uppercase tracking-widest text-[#f5d77f] pb-2 border-b border-[#d4af37]/15">
-                    {t.familyTitle}
+                {/* FAMILY MEMBERS SECTION (Requirement 3: Replaced any maternal with Family Members) */}
+                <div className="p-3.5 rounded-xl bg-black/50 border border-[#d4af37]/20 space-y-2">
+                  <h4 className="text-xs font-accent uppercase tracking-widest text-[#f5d77f] flex items-center gap-1.5 pb-1.5 border-b border-[#d4af37]/15">
+                    <Users size={14} />
+                    <span>{t.familyMembersTitle} ({language === 'hi' ? 'पारिवारिक सदस्य' : 'Family Details'})</span>
                   </h4>
-                  <p className="text-xs text-[#d8c7b5]">
-                    <strong>{t.fatherLabel}:</strong> {language === 'hi' ? selectedProfile.family.fatherHi : selectedProfile.family.fatherEn}
-                  </p>
-                  <p className="text-xs text-[#d8c7b5]">
-                    <strong>{t.motherLabel}:</strong> {language === 'hi' ? selectedProfile.family.motherHi : selectedProfile.family.motherEn}
-                  </p>
-                  <p className="text-xs text-[#d8c7b5]">
-                    <strong>{t.rootsLabel}:</strong> {language === 'hi' ? selectedProfile.family.ancestralOriginHi : selectedProfile.family.ancestralOriginEn}
-                  </p>
+                  <div className="space-y-1.5 text-xs text-[#d8c7b5]">
+                    {selectedProfile.familyMembers.map((m, idx) => (
+                      <div key={idx} className="flex items-center justify-between">
+                        <span className="text-stone-400">{language === 'hi' ? m.relationHi : m.relationEn}:</span>
+                        <span className="text-[#faeed1] font-semibold">{m.name}</span>
+                      </div>
+                    ))}
+                    <div className="flex items-center justify-between pt-1 border-t border-white/5">
+                      <span className="text-stone-400">{t.rootsLabel}:</span>
+                      <span className="text-[#faeed1] font-semibold">{getLoc(selectedProfile)}</span>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Bio & Shared Values */}
+                {/* Personal Ethos & Values */}
                 <div>
-                  <h4 className="text-xs font-accent uppercase tracking-widest text-[#f5d77f] mb-1.5">
+                  <h4 className="text-xs font-accent uppercase tracking-widest text-[#f5d77f] mb-1">
                     {t.personalEthos}
                   </h4>
-                  <p className="text-xs text-stone-300 leading-relaxed font-light mb-3">
+                  <p className="text-xs text-stone-300 leading-relaxed font-light mb-2.5">
                     {getBio(selectedProfile)}
                   </p>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-1.5">
                     {getValues(selectedProfile).map((v, i) => (
                       <span
                         key={i}
-                        className="px-2.5 py-1 rounded-full bg-[#1c040f] border border-[#d4af37]/30 text-[10px] text-[#faeed1]"
+                        className="px-2 py-0.5 rounded-full bg-[#1c040f] border border-[#d4af37]/30 text-[10px] text-[#faeed1]"
                       >
                         #{v}
                       </span>

@@ -5,11 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "server": "node server/server.js",
+    "test:phase2": "node server/test_phase2.cjs",
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview"
   },
   "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
     "gsap": "^3.15.0",
     "lucide-react": "^1.61.0",
     "react": "^19.3.1",
