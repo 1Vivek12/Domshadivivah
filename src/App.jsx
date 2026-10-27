@@ -43,6 +43,18 @@ function MainAppContent() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        if (showManifest) setShowManifest(false);
+        if (adminModalOpen) setAdminModalOpen(false);
+        if (membershipModalOpen) setMembershipModalOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showManifest, adminModalOpen, membershipModalOpen]);
+
   const scenes = [
     { num: 1, name: 'Royal Entrance', hindi: 'मांगलिक प्रवेश' },
     { num: 2, name: 'Mandap Journey', hindi: 'परिणय वेदी' },
@@ -126,44 +138,51 @@ function MainAppContent() {
         })}
       </nav>
 
-      {/* Bottom Floating Visual Asset Manifest Toggle */}
-      <div className="fixed bottom-5 left-5 z-40 flex items-center gap-2">
+      {/* Bottom Floating Visual Asset Manifest Toggle (Responsive Compact Pill on Small Mobile) */}
+      <div className="fixed bottom-3 left-3 sm:bottom-5 sm:left-5 z-40 flex flex-wrap items-center gap-1.5 sm:gap-2 max-w-[calc(100vw-1.5rem)]">
         <button
           onClick={() => setShowManifest(true)}
-          className="flex items-center gap-2 px-3.5 py-2 rounded-full bg-[#18040d]/90 border border-[#d4af37]/50 text-xs font-accent uppercase tracking-wider text-[#faeed1] hover:text-[#f5d77f] shadow-[0_4px_20px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all hover:scale-105"
+          className="flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-full bg-[#18040d]/90 border border-[#d4af37]/60 text-[11px] sm:text-xs font-accent uppercase tracking-wider text-[#faeed1] hover:text-[#f5d77f] shadow-[0_4px_20px_rgba(0,0,0,0.8)] backdrop-blur-md transition-all hover:scale-105 cursor-pointer"
+          title={t.manifestBtn}
         >
-          <Sparkles size={14} className="text-[#d4af37]" />
-          <span>{t.manifestBtn}</span>
+          <Sparkles size={13} className="text-[#d4af37] shrink-0" />
+          <span className="hidden sm:inline">{t.manifestBtn}</span>
+          <span className="sm:hidden">{language === 'hi' ? 'विवरणिका' : 'Audit'}</span>
         </button>
 
         {/* Floating Quick Language Switcher */}
         <button
           onClick={toggleLanguage}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#2a0815]/90 border border-[#d4af37] text-xs font-accent text-[#f5d77f] shadow-lg hover:scale-105 transition-transform backdrop-blur-md"
+          className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full bg-[#2a0815]/90 border border-[#d4af37] text-[11px] sm:text-xs font-accent text-[#f5d77f] shadow-lg hover:scale-105 transition-transform backdrop-blur-md font-bold cursor-pointer"
           title="Toggle Language (देवनागरी / English)"
         >
-          <Globe size={13} />
-          <span>{language === 'hi' ? 'English' : 'हिन्दी'}</span>
+          <Globe size={13} className="shrink-0" />
+          <span>{language === 'hi' ? 'EN' : 'हिन्दी'}</span>
         </button>
 
         {/* Floating Secretariat Admin Button */}
         <button
           onClick={() => setAdminModalOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#18040d]/90 border border-[#d4af37]/60 text-xs font-accent text-[#faeed1] hover:text-[#f5d77f] shadow-lg hover:scale-105 transition-transform backdrop-blur-md"
+          className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full bg-[#18040d]/90 border border-[#d4af37]/60 text-[11px] sm:text-xs font-accent text-[#faeed1] hover:text-[#f5d77f] shadow-lg hover:scale-105 transition-transform backdrop-blur-md cursor-pointer"
           title={t.navAdmin}
         >
-          <Lock size={12} className="text-[#f5d77f]" />
+          <Lock size={12} className="text-[#f5d77f] shrink-0" />
           <span>{t.navAdmin}</span>
         </button>
       </div>
 
       {/* Visual Asset & Quality Manifest Drawer / Modal */}
       {showManifest && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-xl animate-in fade-in">
-          <div className="relative w-full max-w-2xl royal-card bg-[#14030a] border-2 border-[#d4af37] p-6 sm:p-8 rounded-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="manifest-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-xl animate-in fade-in"
+        >
+          <div className="relative w-full max-w-2xl royal-card bg-[#14030a] border-2 border-[#d4af37] p-5 sm:p-8 rounded-2xl shadow-2xl max-h-[85vh] overflow-y-auto">
             <button
               onClick={() => setShowManifest(false)}
-              className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-[#f5d77f] hover:bg-[#801235] transition-colors border border-[#d4af37]/40"
+              className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-[#f5d77f] hover:bg-[#801235] transition-colors border border-[#d4af37]/40 cursor-pointer"
               aria-label="Close manifest"
             >
               <X size={18} />
@@ -172,7 +191,7 @@ function MainAppContent() {
             <span className="text-xs font-mono uppercase tracking-widest text-[#d4af37] block mb-1">
               {t.manifestAudit}
             </span>
-            <h3 className="font-display font-bold text-2xl text-[#faeed1] mb-4">
+            <h3 id="manifest-modal-title" className="font-display font-bold text-2xl text-[#faeed1] mb-4">
               {t.manifestTitle}
             </h3>
 

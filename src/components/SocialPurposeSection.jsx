@@ -47,6 +47,18 @@ export default function SocialPurposeSection({ isReducedMotion }) {
     return () => ctx.revert();
   }, [isReducedMotion]);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && pledgeModalOpen) {
+        resetModal();
+      }
+    };
+    if (pledgeModalOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [pledgeModalOpen]);
+
   const activeAmount = customAmount ? Number(customAmount) : pledgeAmount;
 
   const handlePledgeSubmit = async (e) => {
@@ -106,7 +118,7 @@ export default function SocialPurposeSection({ isReducedMotion }) {
     <section
       id="scene-5"
       ref={sectionRef}
-      className="relative w-full py-28 md:py-36 bg-[#0a0205] overflow-hidden"
+      className="relative w-full py-24 sm:py-28 md:py-36 bg-[#0a0205] overflow-hidden scroll-mt-20"
     >
       <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-amber-600/30 via-transparent to-transparent" />
 
@@ -134,12 +146,18 @@ export default function SocialPurposeSection({ isReducedMotion }) {
         {/* Feature Hero Card with Story Image */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center mb-16">
           <div className="lg:col-span-7 purpose-card relative rounded-2xl overflow-hidden border-2 border-[#d4af37]/30 shadow-2xl">
-            <img
-              src="/assets/social_assistance_kalyanam.jpg"
-              alt="Dignified community wedding gifts and community support for humble bride"
-              className="w-full h-[380px] sm:h-[460px] object-cover object-center filter brightness-[0.9] contrast-[1.05]"
-              loading="lazy"
-            />
+            <picture>
+              <source srcSet="/assets/social_assistance_kalyanam.webp" type="image/webp" />
+              <img
+                src="/assets/social_assistance_kalyanam.jpg"
+                alt="Dignified community wedding gifts and community support for humble bride"
+                width="1376"
+                height="768"
+                loading="lazy"
+                decoding="async"
+                className="w-full h-[340px] sm:h-[460px] object-cover object-center filter brightness-[0.9] contrast-[1.05]"
+              />
+            </picture>
             <div className="absolute inset-0 bg-gradient-to-t from-[#0e0208] via-transparent to-black/30 pointer-events-none" />
 
             <div className="absolute bottom-6 left-6 right-6 p-4 rounded-xl bg-black/80 backdrop-blur-md border border-[#d4af37]/30">
@@ -272,11 +290,16 @@ export default function SocialPurposeSection({ isReducedMotion }) {
 
       {/* Interactive Sahayata Pledge Modal */}
       {pledgeModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-lg animate-in fade-in overflow-y-auto">
-          <div className="relative w-full max-w-lg royal-card bg-[#16030b] border-2 border-[#d4af37] p-6 sm:p-8 rounded-2xl shadow-2xl my-6">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="charity-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-lg animate-in fade-in overflow-y-auto"
+        >
+          <div className="relative w-full max-w-lg royal-card bg-[#16030b] border-2 border-[#d4af37] p-5 sm:p-8 rounded-2xl shadow-2xl my-6">
             <button
               onClick={resetModal}
-              className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-[#f5d77f] hover:bg-[#801235] transition-colors border border-[#d4af37]/40"
+              className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-[#f5d77f] hover:bg-[#801235] transition-colors border border-[#d4af37]/40 cursor-pointer"
               aria-label="Close modal"
             >
               <X size={18} />
@@ -311,7 +334,7 @@ export default function SocialPurposeSection({ isReducedMotion }) {
                 <span className="text-[10px] font-mono uppercase tracking-widest text-[#d4af37] block mb-1">
                   {t.pledgeTag}
                 </span>
-                <h3 className="font-display font-bold text-2xl text-[#faeed1] mb-2">
+                <h3 id="charity-modal-title" className="font-display font-bold text-2xl text-[#faeed1] mb-2">
                   {t.pledgeTitle}
                 </h3>
                 <p className="text-xs text-[#d8c7b5] leading-relaxed mb-4 font-light">

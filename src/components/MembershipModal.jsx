@@ -94,6 +94,18 @@ export default function MembershipModal({ isOpen, onClose }) {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        resetForm();
+      }
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
   const resetForm = () => {
     setSubmittedData(null);
     setErrorMessage('');
@@ -101,11 +113,16 @@ export default function MembershipModal({ isOpen, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-xl animate-in fade-in overflow-y-auto">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="membership-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/90 backdrop-blur-xl animate-in fade-in overflow-y-auto"
+    >
       <div className="relative w-full max-w-2xl royal-card bg-[#14030a] border-2 border-[#d4af37] p-5 sm:p-8 rounded-2xl shadow-[0_0_60px_rgba(212,175,55,0.35)] my-6 max-h-[92vh] overflow-y-auto">
         <button
           onClick={resetForm}
-          className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-[#f5d77f] hover:bg-[#801235] transition-colors border border-[#d4af37]/40"
+          className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-[#f5d77f] hover:bg-[#801235] transition-colors border border-[#d4af37]/40 cursor-pointer"
           aria-label="Close modal"
         >
           <X size={18} />
@@ -162,7 +179,7 @@ export default function MembershipModal({ isOpen, onClose }) {
               <span>{t.modalBadge}</span>
             </div>
 
-            <h3 className="font-display font-bold text-2xl sm:text-3xl text-[#faeed1] mb-1">
+            <h3 id="membership-modal-title" className="font-display font-bold text-2xl sm:text-3xl text-[#faeed1] mb-1">
               {t.modalTitle}
             </h3>
 

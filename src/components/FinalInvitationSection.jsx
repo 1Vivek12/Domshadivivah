@@ -59,16 +59,22 @@ export default function FinalInvitationSection({ isReducedMotion, onOpenMembersh
     <section
       id="scene-6"
       ref={sectionRef}
-      className="relative w-full pt-28 md:pt-36 bg-[#080104] overflow-hidden"
+      className="relative w-full pt-24 sm:pt-28 md:pt-36 bg-[#080104] overflow-hidden scroll-mt-20"
     >
       {/* Background Visual Layer */}
       <div className="absolute inset-0 z-0">
-        <img
-          src="/assets/cinematic_video_poster.jpg"
-          alt="Royal burgundy and gold palace arch with volumetric light rays"
-          className="w-full h-full object-cover object-center filter brightness-[0.45] contrast-[1.2]"
-          loading="lazy"
-        />
+        <picture>
+          <source srcSet="/assets/cinematic_video_poster.webp" type="image/webp" />
+          <img
+            src="/assets/cinematic_video_poster.jpg"
+            alt="Royal burgundy and gold palace arch with volumetric light rays"
+            width="1376"
+            height="768"
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover object-center filter brightness-[0.45] contrast-[1.2]"
+          />
+        </picture>
         <div className="absolute inset-0 bg-gradient-to-t from-[#080104] via-[#100207]/75 to-[#0a0205] pointer-events-none" />
         <div className="cinematic-vignette pointer-events-none" />
       </div>
@@ -77,7 +83,7 @@ export default function FinalInvitationSection({ isReducedMotion, onOpenMembersh
         {/* Final Invitation Royal Card */}
         <div
           ref={cardRef}
-          className="royal-card max-w-4xl mx-auto p-8 sm:p-14 text-center border-2 border-[#d4af37]/70 shadow-[0_25px_60px_rgba(0,0,0,0.9)] relative bg-[#18040d]/85 mb-24"
+          className="royal-card max-w-4xl mx-auto p-6 sm:p-14 text-center border-2 border-[#d4af37]/70 shadow-[0_25px_60px_rgba(0,0,0,0.9)] relative bg-[#18040d]/85 mb-20 sm:mb-24"
         >
           {/* Corner Ornaments */}
           <div className="royal-card-corner corner-tl" />
@@ -88,12 +94,12 @@ export default function FinalInvitationSection({ isReducedMotion, onOpenMembersh
           {/* Royal Seal Emblem */}
           <div
             ref={sealRef}
-            className="w-20 h-20 rounded-full mx-auto mb-6 bg-gradient-to-br from-[#d4af37] via-[#801235] to-[#20040d] border-2 border-[#f5d77f] flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.4)]"
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full mx-auto mb-6 bg-gradient-to-br from-[#d4af37] via-[#801235] to-[#20040d] border-2 border-[#f5d77f] flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.4)]"
           >
-            <span className="font-display font-extrabold text-[#faeed1] text-2xl">ॐ</span>
+            <span className="font-display font-extrabold text-[#faeed1] text-xl sm:text-2xl">ॐ</span>
           </div>
 
-          <div className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-black/60 border border-[#d4af37]/40 text-[#f5d77f] text-xs uppercase tracking-[0.2em] font-accent mb-4">
+          <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-1 rounded-full bg-black/60 border border-[#d4af37]/40 text-[#f5d77f] text-[10px] sm:text-xs uppercase tracking-[0.2em] font-accent mb-4">
             <Sparkles size={12} />
             <span>{t.scene6Badge}</span>
           </div>
@@ -106,41 +112,46 @@ export default function FinalInvitationSection({ isReducedMotion, onOpenMembersh
             <div className="royal-divider-diamond"></div>
           </div>
 
-          <p className="font-accent text-base sm:text-lg text-[#faeed1] font-light max-w-2xl mx-auto leading-relaxed mb-8">
+          <p className="font-accent text-base sm:text-lg text-[#faeed1] font-light max-w-2xl mx-auto leading-relaxed mb-8 px-2">
             {t.scene6Subtitle}
           </p>
 
           {/* Action CTAs */}
-          <div className="flex flex-wrap items-center justify-center gap-5">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5 w-full max-w-md sm:max-w-none mx-auto">
             <button
               onClick={onOpenMembershipModal}
-              className="btn-royal-gold px-8 py-4 text-sm"
+              className="btn-royal-gold w-full sm:w-auto px-8 py-3.5 sm:py-4 text-xs sm:text-sm cursor-pointer"
             >
               <span>{t.requestMembershipBtn}</span>
             </button>
 
             <a
               href="#scene-4"
-              className="btn-royal-outline px-7 py-3.5 text-xs tracking-wider"
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.getElementById('scene-4');
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+              className="btn-royal-outline w-full sm:w-auto px-7 py-3.5 text-xs tracking-wider cursor-pointer text-center"
             >
               <span>{t.reviewProfilesBtn}</span>
             </a>
           </div>
 
-          <div className="mt-8 pt-6 border-t border-[#d4af37]/20 flex flex-wrap items-center justify-center gap-6 text-xs text-[#d8c7b5]/80 font-accent">
+          <div className="mt-8 pt-6 border-t border-[#d4af37]/20 flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs text-[#d8c7b5]/80 font-accent">
             <span className="flex items-center gap-1.5">
               <Shield size={14} className="text-[#d4af37]" />
               {t.trustConfidential}
             </span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>{t.trustVerified}</span>
-            <span>•</span>
+            <span className="hidden sm:inline">•</span>
             <span>{t.trustMediation}</span>
           </div>
         </div>
 
-        {/* LUXURY ROYAL FOOTER */}
-        <footer className="pt-16 pb-12 border-t border-[#d4af37]/20 text-stone-300">
+        {/* LUXURY ROYAL FOOTER (Extended bottom padding to ensure zero overlap with fixed controls) */}
+        <footer className="pt-16 pb-28 sm:pb-24 border-t border-[#d4af37]/20 text-stone-300">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 mb-12">
             {/* Col 1: Brand & Sanskrit Shloka */}
             <div className="lg:col-span-4 space-y-4">

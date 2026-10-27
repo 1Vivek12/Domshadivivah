@@ -1,6 +1,85 @@
 {
   "memberships": [
     {
+      "id": "MEM-2026-1506",
+      "role": "bride",
+      "fee": 2100,
+      "currency": "INR",
+      "name": "Sunidhi Kumari",
+      "dob": "1999-08-22",
+      "age": 26,
+      "maritalStatus": "never_married",
+      "education": "M.Sc Biochemistry",
+      "profession": "Research Associate",
+      "city": "Varanasi",
+      "state": "",
+      "phone": "9123456789",
+      "email": "sunidhi.k@example.com",
+      "familyMembers": [
+        {
+          "relation": "Father",
+          "name": "Shri D. N. Shastri",
+          "contact": "9123456780",
+          "consentGiven": true
+        }
+      ],
+      "termsAccepted": true,
+      "privacyConsent": true,
+      "status": "active",
+      "marriageFixedConsent": false,
+      "charityVoluntaryNotified": false,
+      "paymentStatus": "gateway_pending",
+      "paymentGatewayStatus": "INTEGRATION_PENDING (No mock success screen)",
+      "transactionRef": null,
+      "receiptRef": null,
+      "refundDisputeStatus": "none",
+      "createdAt": "2026-10-27T08:21:41.506Z",
+      "updatedAt": "2026-10-27T08:21:41.506Z"
+    },
+    {
+      "id": "MEM-2026-1502",
+      "role": "groom",
+      "fee": 5100,
+      "currency": "INR",
+      "name": "Amit Vikramaditya",
+      "dob": "1996-05-14",
+      "age": 29,
+      "maritalStatus": "never_married",
+      "education": "B.Tech IIT Delhi",
+      "profession": "Senior System Architect",
+      "city": "Patna / Bengaluru",
+      "state": "",
+      "phone": "9876543210",
+      "email": "amit.vikram@example.com",
+      "familyMembers": [
+        {
+          "relation": "Father",
+          "name": "Shri R. K. Vikramaditya",
+          "contact": "9876543211",
+          "consentGiven": true
+        },
+        {
+          "relation": "Mother",
+          "name": "Smt. Shanti Vikramaditya",
+          "contact": "",
+          "consentGiven": true
+        }
+      ],
+      "termsAccepted": true,
+      "privacyConsent": true,
+      "status": "marriage_fixed",
+      "marriageFixedConsent": true,
+      "charityVoluntaryNotified": true,
+      "paymentStatus": "gateway_pending",
+      "paymentGatewayStatus": "INTEGRATION_PENDING (No mock success screen)",
+      "transactionRef": null,
+      "receiptRef": null,
+      "refundDisputeStatus": "none",
+      "createdAt": "2026-10-27T08:21:41.502Z",
+      "updatedAt": "2026-10-27T08:21:41.517Z",
+      "marriageFixedConfirmedBy": "admin@domshadivivah.in"
+    },
+    {
       "id": "MEM-2026-8454",
       "role": "bride",
       "fee": 2100,
@@ -421,6 +500,24 @@
   ],
   "charity_contributions": [
     {
+      "id": "CHT-2026-1511",
+      "contributorName": "Dr. Alok Verma",
+      "email": "dr.verma@example.com",
+      "phone": "9876500000",
+      "amount": 11000,
+      "currency": "INR",
+      "purpose": "आर्थिक रूप से कमजोर परिवारों की बेटियों के विवाह में सहायता हेतु स्वैच्छिक योगदान",
+      "voluntaryAcknowledged": true,
+      "linkedMembershipId": null,
+      "paymentStatus": "gateway_pending",
+      "paymentGatewayStatus": "INTEGRATION_PENDING (Awaiting Gateway Integration)",
+      "transactionRef": null,
+      "receiptRef": null,
+      "refundDisputeStatus": "none",
+      "disclaimerAccepted": true,
+      "createdAt": "2026-10-27T08:21:41.511Z"
+    },
+    {
       "id": "CHT-2026-8458",
       "contributorName": "Dr. Alok Verma",
       "email": "dr.verma@example.com",
@@ -512,6 +609,50 @@
     }
   ],
   "audit_logs": [
+    {
+      "id": "AUD-301517",
+      "timestamp": "2026-10-27T08:21:41.517Z",
+      "adminUser": "admin@domshadivivah.in",
+      "action": "STATUS_CHANGE",
+      "targetType": "membership",
+      "targetId": "MEM-2026-1502",
+      "previousState": "active",
+      "newState": "marriage_fixed",
+      "reason": "Verified mutual consent agreement signed by both families on 27-Oct-2026."
+    },
+    {
+      "id": "AUD-301512",
+      "timestamp": "2026-10-27T08:21:41.512Z",
+      "adminUser": "SYSTEM_CHARITY",
+      "action": "CHARITY_CONTRIBUTION_PLEDGED",
+      "targetType": "charity",
+      "targetId": "CHT-2026-1511",
+      "previousState": null,
+      "newState": "pledged_gateway_pending",
+      "reason": "Voluntary charity pledge of ₹11000 recorded separately. Gateway integration pending."
+    },
+    {
+      "id": "AUD-301507",
+      "timestamp": "2026-10-27T08:21:41.507Z",
+      "adminUser": "SYSTEM_REGISTRATION",
+      "action": "NEW_MEMBERSHIP_REGISTERED",
+      "targetType": "membership",
+      "targetId": "MEM-2026-1506",
+      "previousState": null,
+      "newState": "active",
+      "reason": "Member registered as BRIDE with fee ₹2100. Payment pending gateway integration."
+    },
+    {
+      "id": "AUD-301503",
+      "timestamp": "2026-10-27T08:21:41.503Z",
+      "adminUser": "SYSTEM_REGISTRATION",
+      "action": "NEW_MEMBERSHIP_REGISTERED",
+      "targetType": "membership",
+      "targetId": "MEM-2026-1502",
+      "previousState": null,
+      "newState": "active",
+      "reason": "Member registered as GROOM with fee ₹5100. Payment pending gateway integration."
+    },
     {
       "id": "AUD-018463",
       "timestamp": "2026-10-27T08:00:18.463Z",

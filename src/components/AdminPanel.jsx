@@ -164,15 +164,36 @@ export default function AdminPanel({ isOpen, onClose }) {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        if (editingMember) {
+          setEditingMember(null);
+        } else {
+          onClose();
+        }
+      }
+    };
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, editingMember]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/90 backdrop-blur-xl animate-in fade-in overflow-y-auto">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="admin-panel-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-black/90 backdrop-blur-xl animate-in fade-in overflow-y-auto"
+    >
       <div className="relative w-full max-w-6xl royal-card bg-[#120309] border-2 border-[#d4af37] p-5 sm:p-7 rounded-2xl shadow-2xl my-4 max-h-[92vh] overflow-y-auto">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-[#f5d77f] hover:bg-[#801235] transition-colors border border-[#d4af37]/40"
+          className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-[#f5d77f] hover:bg-[#801235] transition-colors border border-[#d4af37]/40 cursor-pointer"
           aria-label="Close admin modal"
         >
           <X size={18} />
@@ -185,7 +206,7 @@ export default function AdminPanel({ isOpen, onClose }) {
               <div className="w-14 h-14 rounded-full bg-[#801235] border border-[#d4af37] mx-auto flex items-center justify-center text-[#f5d77f] mb-3">
                 <Lock size={24} />
               </div>
-              <h3 className="font-display font-bold text-2xl text-gold-gradient">
+              <h3 id="admin-panel-title" className="font-display font-bold text-2xl text-gold-gradient">
                 {t.adminLoginTitle}
               </h3>
               <p className="text-xs text-[#d8c7b5] mt-1 font-light">

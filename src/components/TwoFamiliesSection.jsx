@@ -16,6 +16,7 @@ export default function TwoFamiliesSection({ isReducedMotion }) {
       id: 0,
       title: t.story1Title,
       tagline: t.story1Tagline,
+      webp: '/assets/family_blessing_heritage.webp',
       image: '/assets/family_blessing_heritage.jpg',
       alt: 'Royal Indian family elders blessing bride and groom in traditional banarasi attire',
       description: t.story1Desc,
@@ -26,6 +27,7 @@ export default function TwoFamiliesSection({ isReducedMotion }) {
       id: 1,
       title: t.story2Title,
       tagline: t.story2Tagline,
+      webp: '/assets/sacred_wedding_rituals.webp',
       image: '/assets/sacred_wedding_rituals.jpg',
       alt: 'Close-up of sacred mangalsutra ritual and havankund fire',
       description: t.story2Desc,
@@ -61,7 +63,7 @@ export default function TwoFamiliesSection({ isReducedMotion }) {
     <section
       id="scene-3"
       ref={sectionRef}
-      className="relative w-full py-28 md:py-36 bg-[#0a0206] overflow-hidden"
+      className="relative w-full py-24 sm:py-28 md:py-36 bg-[#0a0206] overflow-hidden scroll-mt-20"
     >
       {/* Decorative Jharokha background pattern */}
       <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#d4af37_1px,transparent_1px)] [background-size:24px_24px]" />
@@ -112,12 +114,18 @@ export default function TwoFamiliesSection({ isReducedMotion }) {
           {/* Left Column: Visual Image with Arch Frame & Crossfade */}
           <div className="lg:col-span-7 family-visual-frame relative">
             <div className="relative rounded-2xl overflow-hidden border-2 border-[#d4af37]/40 shadow-[0_20px_60px_rgba(0,0,0,0.85)] group">
-              <img
-                src={stories[activeStory].image}
-                alt={stories[activeStory].alt}
-                className="w-full h-[400px] sm:h-[480px] lg:h-[540px] object-cover object-center filter brightness-[0.92] contrast-[1.08] transition-all duration-700 group-hover:scale-105"
-                key={stories[activeStory].id}
-              />
+              <picture key={stories[activeStory].id}>
+                <source srcSet={stories[activeStory].webp} type="image/webp" />
+                <img
+                  src={stories[activeStory].image}
+                  alt={stories[activeStory].alt}
+                  width="1376"
+                  height="768"
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-[320px] sm:h-[460px] lg:h-[520px] object-cover object-center filter brightness-[0.92] contrast-[1.08] transition-all duration-700 group-hover:scale-105"
+                />
+              </picture>
 
               <div className="absolute inset-0 bg-gradient-to-t from-[#14030a] via-transparent to-black/30 pointer-events-none" />
 

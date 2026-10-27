@@ -30,6 +30,7 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
       locationHi: 'उदयपुर एवं मुम्बई • पैतृक: मेवाड़, राजस्थान',
       gotraEn: 'Vatsa Gotra • Rajput Kshatriya',
       gotraHi: 'वत्स गोत्र • सूर्यवंशी राजपूत क्षत्रिय',
+      webp: '/assets/groom_demo_profile.webp',
       image: '/assets/groom_demo_profile.jpg',
       bioEn: 'Dedicated to preserving India’s architectural treasures. Grounded in Mewari principles of honor, loyalty, and deep spiritual reverence for family elders.',
       bioHi: 'भारत की स्थापत्य धरोहरों के संरक्षण हेतु समर्पित। मेवाड़ी कुल मर्यादा एवं ज्येष्ठजनों के प्रति अगाध आदर से परिपूर्ण।',
@@ -67,6 +68,7 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
       locationHi: 'बेंगलुरु • पैतृक: काशी (वाराणसी)',
       gotraEn: 'Kashyapa Gotra • Brahmin',
       gotraHi: 'कश्यप गोत्र • सनाढ्य ब्राह्मण',
+      webp: '/assets/bride_demo_profile.webp',
       image: '/assets/bride_demo_profile.jpg',
       bioEn: 'Deeply appreciative of Vedic philosophy and classical arts while thriving in cutting-edge technology. Enjoys Sanskrit literature and respectful family conversations.',
       bioHi: 'वैदिक दर्शन एवं भारतीय शास्त्रीय कलाओं के प्रति गहरी निष्ठा। संस्कृत साहित्य, सितार वादन एवं संयुक्त पारिवारिक संस्कारों में विश्वास।',
@@ -103,6 +105,7 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
       locationHi: 'हैदराबाद • पैतृक: विजयवाड़ा, आं.प्र.',
       gotraEn: 'Bharadwaja Gotra',
       gotraHi: 'भारद्वाज गोत्र',
+      webp: '/assets/bride_demo_profile.webp',
       image: '/assets/bride_demo_profile.jpg',
       bioEn: 'Combining scientific rigor with deep devotion to ancient temple arts. Marriage fixed with mutual family blessings.',
       bioHi: 'आधुनिक चिकित्सा विज्ञान के साथ प्राचीन मंदिर कलाओं का समन्वय। दोनों परिवारों के आशीर्वाद से विवाह तय हुआ।',
@@ -138,6 +141,7 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
       locationHi: 'लखनऊ • पैतृक: अवध क्षेत्र, उ.प्र.',
       gotraEn: 'Shandilya Gotra',
       gotraHi: 'शांडिल्य गोत्र',
+      webp: '/assets/groom_demo_profile.webp',
       image: '/assets/groom_demo_profile.jpg',
       bioEn: 'Committed to grassroots public service and integrity. Believes marriage is a sacred partnership where both partners champion each other’s aspirations.',
       bioHi: 'सत्यनिष्ठा और लोक कल्याण के प्रति समर्पित। विवाह को ऐसा पवित्र सहचर्य मानते हैं जिसमें दोनों परिवार परस्पर मर्यादा का आदर करते हैं।',
@@ -188,6 +192,18 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
     return () => ctx.revert();
   }, [activeFilter, isReducedMotion]);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && selectedProfile) {
+        setSelectedProfile(null);
+      }
+    };
+    if (selectedProfile) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedProfile]);
+
   const getName = (p) => (language === 'hi' ? p.nameHi : p.nameEn);
   const getProf = (p) => (language === 'hi' ? p.professionHi : p.professionEn);
   const getEdu = (p) => (language === 'hi' ? p.educationHi : p.educationEn);
@@ -229,7 +245,7 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
     <section
       id="scene-4"
       ref={sectionRef}
-      className="relative w-full py-28 md:py-36 bg-[#0c0207] overflow-hidden"
+      className="relative w-full py-24 sm:py-28 md:py-36 bg-[#0c0207] overflow-hidden scroll-mt-20"
     >
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
@@ -260,8 +276,8 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
           </div>
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex items-center justify-center gap-3 mb-12">
+        {/* Filter Tabs (Responsive wrap without clipping) */}
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-10 sm:mb-12 px-2">
           {[
             { id: 'all', label: t.filterAll },
             { id: 'bride', label: t.filterBrides },
@@ -270,7 +286,7 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
             <button
               key={tab.id}
               onClick={() => setActiveFilter(tab.id)}
-              className={`px-5 py-2.5 rounded-full text-xs uppercase tracking-wider font-accent transition-all duration-300 border ${
+              className={`px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs uppercase tracking-wider font-accent transition-all duration-300 border ${
                 activeFilter === tab.id
                   ? 'bg-[#d4af37] text-black font-bold shadow-[0_0_15px_rgba(212,175,55,0.4)] border-[#f5d77f]'
                   : 'bg-black/50 text-[#d8c7b5] border-[#d4af37]/25 hover:border-[#d4af37]/60'
@@ -296,12 +312,18 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
               <div>
                 {/* Profile Portrait with Status Tag */}
                 <div className="relative h-72 sm:h-80 overflow-hidden bg-black/60">
-                  <img
-                    src={profile.image}
-                    alt={getName(profile)}
-                    className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 filter brightness-95"
-                    loading="lazy"
-                  />
+                  <picture>
+                    <source srcSet={profile.webp} type="image/webp" />
+                    <img
+                      src={profile.image}
+                      alt={getName(profile)}
+                      width="600"
+                      height="800"
+                      loading="lazy"
+                      decoding="async"
+                      className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-105 filter brightness-95"
+                    />
+                  </picture>
                   <div className="absolute inset-0 bg-gradient-to-t from-[#14030a] via-transparent to-black/30" />
 
                   {/* Top Left: Reference ID */}
@@ -369,11 +391,16 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
 
       {/* Profile Detail Modal */}
       {selectedProfile && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg animate-in fade-in overflow-y-auto">
-          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto royal-card bg-[#14030a] border-2 border-[#d4af37] p-6 sm:p-8 rounded-2xl shadow-[0_0_50px_rgba(212,175,55,0.3)] my-6">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="profile-modal-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-lg animate-in fade-in overflow-y-auto"
+        >
+          <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto royal-card bg-[#14030a] border-2 border-[#d4af37] p-5 sm:p-8 rounded-2xl shadow-[0_0_50px_rgba(212,175,55,0.3)] my-6">
             <button
               onClick={() => setSelectedProfile(null)}
-              className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-[#f5d77f] hover:bg-[#801235] transition-colors border border-[#d4af37]/40"
+              className="absolute top-4 right-4 p-2 rounded-full bg-black/60 text-[#f5d77f] hover:bg-[#801235] transition-colors border border-[#d4af37]/40 cursor-pointer"
               aria-label="Close modal"
             >
               <X size={20} />
@@ -419,7 +446,7 @@ export default function DiscoverMatchSection({ isReducedMotion }) {
               {/* Modal Right: In-depth Details */}
               <div className="sm:col-span-7 space-y-4">
                 <div>
-                  <h3 className="font-display font-bold text-2xl text-gold-gradient">
+                  <h3 id="profile-modal-title" className="font-display font-bold text-2xl text-gold-gradient">
                     {getName(selectedProfile)}
                   </h3>
                   <p className="text-xs text-[#d4af37] font-mono">

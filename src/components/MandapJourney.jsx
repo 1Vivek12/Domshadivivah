@@ -98,17 +98,23 @@ export default function MandapJourney({ isReducedMotion }) {
     <section
       id="scene-2"
       ref={sectionRef}
-      className="relative w-full py-28 md:py-36 overflow-hidden bg-[#0d0207]"
+      className="relative w-full py-24 sm:py-28 md:py-36 overflow-hidden bg-[#0d0207] scroll-mt-20"
     >
       {/* Background Visual Layer with Parallax */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div ref={bgImageRef} className="absolute inset-0 w-full h-[120%] -top-[10%] will-change-transform">
-          <img
-            src="/assets/mandap_ornate_details.jpg"
-            alt="Ornate Wedding Mandap Canopy with Chandelier and Falling Rose Petals"
-            className="w-full h-full object-cover object-center filter brightness-[0.55] contrast-[1.15]"
-            loading="lazy"
-          />
+          <picture>
+            <source srcSet="/assets/mandap_ornate_details.webp" type="image/webp" />
+            <img
+              src="/assets/mandap_ornate_details.jpg"
+              alt="Ornate Wedding Mandap Canopy with Chandelier and Falling Rose Petals"
+              width="1376"
+              height="768"
+              loading="lazy"
+              decoding="async"
+              className="w-full h-full object-cover object-center filter brightness-[0.55] contrast-[1.15]"
+            />
+          </picture>
         </div>
         {/* Deep rich burgundy gradient masks */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#0c0206] via-[#1a040e]/75 to-[#0e0208] pointer-events-none" />

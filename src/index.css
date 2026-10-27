@@ -44,6 +44,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
   background-color: var(--bg-deep);
   color: var(--text-primary);
   font-family: var(--font-body);
@@ -52,6 +53,10 @@ html {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+section[id^="scene-"] {
+  scroll-margin-top: 5rem;
 }
 
 body {

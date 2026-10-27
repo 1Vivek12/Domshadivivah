@@ -24,6 +24,25 @@ export default function Navbar({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mobileMenuOpen]);
+
+  const handleNavClick = (e, href) => {
+    e.preventDefault();
+    setMobileMenuOpen(false);
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   const toggleSound = () => {
     const playing = royalAudio.toggle();
     setIsAudioPlaying(playing);
@@ -68,7 +87,8 @@ export default function Navbar({
             <a
               key={item.href}
               href={item.href}
-              className="text-xs uppercase tracking-[0.14em] font-accent text-[#d8c7b5] hover:text-[#f5d77f] transition-colors relative py-1 group"
+              onClick={(e) => handleNavClick(e, item.href)}
+              className="text-xs uppercase tracking-[0.14em] font-accent text-[#d8c7b5] hover:text-[#f5d77f] transition-colors relative py-1 group cursor-pointer"
             >
               <span className="text-[9px] text-[#d4af37]/70 mr-1 font-mono">0{idx + 1}</span>
               {item.name}
@@ -187,40 +207,41 @@ export default function Navbar({
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-[#faeed1] hover:text-[#d4af37]"
+            className="p-2 text-[#faeed1] hover:text-[#d4af37] focus:outline-none focus:ring-2 focus:ring-[#d4af37]/50 rounded-lg cursor-pointer"
             aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileMenuOpen ? <X size={22} className="text-[#f5d77f]" /> : <Menu size={22} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Dropdown */}
+      {/* Mobile Menu Dropdown (High-Contrast, Accessible & Smooth Scrolling) */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-[#14030a]/98 backdrop-blur-xl border-b border-[#d4af37]/30 px-6 py-6 transition-all">
-          <div className="flex flex-col gap-3.5 mb-6">
+        <div className="xl:hidden bg-[#100207]/98 backdrop-blur-2xl border-b-2 border-[#d4af37]/50 px-5 py-6 shadow-2xl transition-all animate-in fade-in max-h-[85vh] overflow-y-auto">
+          <div className="flex flex-col gap-2 mb-6">
             {navLinks.map((item, idx) => (
               <a
                 key={item.href}
                 href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-sm uppercase tracking-wider font-accent text-[#faeed1] hover:text-[#f5d77f] py-1 flex items-center justify-between"
+                onClick={(e) => handleNavClick(e, item.href)}
+                className="text-sm uppercase tracking-wider font-accent text-white hover:text-[#f5d77f] hover:bg-white/5 px-3 py-2.5 rounded-lg flex items-center justify-between border-b border-white/5 transition-colors cursor-pointer"
               >
-                <span>{item.name}</span>
-                <span className="text-xs text-[#d4af37]/70 font-mono">0{idx + 1}</span>
+                <span className="font-semibold">{item.name}</span>
+                <span className="text-xs text-[#f5d77f] font-mono font-bold bg-[#801235]/60 px-2 py-0.5 rounded border border-[#d4af37]/30">0{idx + 1}</span>
               </a>
             ))}
           </div>
 
-          <div className="pt-4 border-t border-[#d4af37]/20 flex flex-col gap-3">
+          <div className="pt-4 border-t border-[#d4af37]/30 flex flex-col gap-3">
             {/* Language Switch in Mobile Menu */}
             <button
               onClick={() => {
                 toggleLanguage();
               }}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded border border-[#d4af37] text-xs font-accent uppercase text-[#f5d77f] bg-[#2a0815]"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-[#d4af37] text-xs font-accent uppercase text-[#f5d77f] bg-[#2a0815] shadow font-bold cursor-pointer"
             >
-              <Globe size={15} />
+              <Globe size={16} className="text-[#f5d77f]" />
               <span>{language === 'hi' ? 'Switch to English' : 'देवनागरी (हिन्दी) में बदलें'}</span>
             </button>
 
@@ -229,9 +250,9 @@ export default function Navbar({
                 setIs3DMode(!is3DMode);
                 setMobileMenuOpen(false);
               }}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded border border-[#d4af37]/40 text-xs font-accent uppercase text-[#faeed1]"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-[#d4af37]/50 text-xs font-accent uppercase text-white bg-black/60 shadow font-semibold cursor-pointer"
             >
-              <Box size={16} />
+              <Box size={16} className="text-[#f5d77f]" />
               <span>{is3DMode ? t.navFilmMode : t.nav3DMode}</span>
             </button>
 
@@ -240,9 +261,9 @@ export default function Navbar({
                 setIsReducedMotion(!isReducedMotion);
                 setMobileMenuOpen(false);
               }}
-              className="flex items-center justify-center gap-2 w-full py-2 rounded border border-[#d4af37]/30 text-xs font-accent uppercase text-stone-300"
+              className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-[#d4af37]/30 text-xs font-accent uppercase text-stone-200 bg-black/40 cursor-pointer"
             >
-              <Sparkles size={14} />
+              <Sparkles size={14} className="text-[#f5d77f]" />
               <span>{isReducedMotion ? 'Enable Motion' : t.navReducedMotion}</span>
             </button>
 
@@ -251,7 +272,7 @@ export default function Navbar({
                 setMobileMenuOpen(false);
                 onOpenAdminModal();
               }}
-              className="flex items-center justify-center gap-2 w-full py-2.5 rounded border border-[#d4af37]/40 text-xs font-accent uppercase text-[#f5d77f] bg-black/50"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-[#d4af37]/60 text-xs font-accent uppercase text-[#f5d77f] bg-[#1a040d] font-semibold shadow cursor-pointer"
             >
               <Lock size={15} />
               <span>{t.navAdmin}</span>
@@ -262,7 +283,7 @@ export default function Navbar({
                 setMobileMenuOpen(false);
                 onOpenMembershipModal();
               }}
-              className="btn-royal-gold w-full text-center py-3 text-xs"
+              className="btn-royal-gold w-full text-center py-3.5 text-xs font-bold shadow-lg cursor-pointer"
             >
               {t.navInquireVivah}
             </button>
